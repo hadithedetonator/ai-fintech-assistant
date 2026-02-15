@@ -130,9 +130,10 @@ class LLMService:
                     "text-generation",
                     model=model_str_path,
                     tokenizer=tokenizer,
-                    max_new_tokens=512,
+                    max_new_tokens=2048, # Increased to prevent cutoffs
                     temperature=0.1,
                     top_p=0.9,
+                    repetition_penalty=1.1, # Reduce looping
                     device=device, # Explicit device handling
                     trust_remote_code=True,
                     return_full_text=False # Ensure we only get the answer, not the prompt echoed back
@@ -284,7 +285,9 @@ class LLMService:
                         
                     # Improved Prompt Structure for Local Models (ChatML-style or Standard)
                     local_prompt = (
-                        f"### System:\n{full_system_prompt}\n\n"
+                        f"### System:\n{full_system_prompt}\n"
+                        f"IMPORTANT: Format your response in clean Markdown (lists, headers, bold text). "
+                        f"Do not cut off the answer.\n\n"
                         f"### Context:\n{context_text}\n\n"
                         f"### User:\n{query}\n\n"
                         f"### Assistant:\n"
