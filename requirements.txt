@@ -1,0 +1,21 @@
+fastapi==0.129.0
+uvicorn==0.40.0
+langchain==1.2.10
+langchain-core==1.2.12
+langchain-openai==1.1.9
+langchain-community==0.4.1
+langchain-text-splitters==1.1.0
+python-dotenv==1.2.1
+pydantic==2.12.5
+httpx==0.28.1
+slowapi==0.1.9
+faiss-cpu==1.13.2
+langchain-google-genai
+google-genai
+# Local LLM Support
+torch
+transformers
+accelerate
+sentence-transformers
+langchain-huggingface
+llama-cpp-python
