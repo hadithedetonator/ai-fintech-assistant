@@ -127,7 +127,8 @@ class LLMService:
                     temperature=0.1,
                     top_p=0.9,
                     device=device, # Explicit device handling
-                    trust_remote_code=True
+                    trust_remote_code=True,
+                    return_full_text=False # Ensure we only get the answer, not the prompt echoed back
                 )
                 
                 logger.info("✅ Model loaded successfully!")
@@ -272,7 +273,15 @@ class LLMService:
                     else:
                         context_text = str(tool_output) # Ensure string
                         
-                    local_prompt = f"{full_system_prompt}\n\nRELEVANT CONTEXT:\n{context_text}\n\nUSER QUERY: {query}"
+                        context_text = str(tool_output) # Ensure string
+                        
+                    # Improved Prompt Structure for Local Models (ChatML-style or Standard)
+                    local_prompt = (
+                        f"### System:\n{full_system_prompt}\n\n"
+                        f"### Context:\n{context_text}\n\n"
+                        f"### User:\n{query}\n\n"
+                        f"### Assistant:\n"
+                    )
                     
                     # HuggingFacePipeline is an LLM, not a ChatModel, so we use invoke directly
                     answer = llm.invoke(local_prompt)
