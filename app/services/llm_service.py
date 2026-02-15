@@ -101,15 +101,22 @@ class LLMService:
                 model_str_path = str(model_dir) # Transformers expects a string path
                 
                 # Determine device
+                # Determine device and debug info
                 device = "cpu"
                 if torch.backends.mps.is_available():
                     device = "mps"
                     logger.info("⚡ Using MPS (Metal Performance Shaders) acceleration")
                 elif torch.cuda.is_available():
-                    device = "cuda"
-                    logger.info("⚡ Using CUDA acceleration")
+                    device = 0 # Use integer 0 for the first GPU with transformers pipeline
+                    gpu_name = torch.cuda.get_device_name(0)
+                    logger.info(f"⚡ Using CUDA acceleration: {gpu_name}")
                 else:
                     logger.info("🐢 Using CPU (no acceleration detected)")
+                    # Debugging assistance for the user
+                    if torch.version.cuda:
+                        logger.warning(f"⚠️  PyTorch has CUDA {torch.version.cuda} support, but no GPU was detected. Check drivers.")
+                    else:
+                        logger.warning("⚠️  PyTorch is installed as CPU-only. Install a CUDA-enabled version for GPU support.")
 
                 logger.info("⏳ Loading Tokenizer...")
                 tokenizer = AutoTokenizer.from_pretrained(model_str_path, trust_remote_code=True)

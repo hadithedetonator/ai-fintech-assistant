@@ -14,6 +14,20 @@ If you want to run the service completely offline or as a last-resort fallback:
 1.  Download a `.gguf` model (e.g., Llama-3-8B-Instruct).
 2.  Place it in the `ai-service/app/models/` directory.
 3.  The system will automatically detect and use it if all API keys are exhausted.
+
+### 🖥️ Hardware Acceleration (GPU/NPU)
+The service automatically checks for hardware acceleration in this order:
+1.  **Mac Silicon (MPS)**: Uses Metal Performance Shaders (MacBook M1/M2/M3).
+2.  **NVIDIA GPU (CUDA)**: Uses CUDA if available.
+3.  **CPU**: Falls back to CPU if no GPU is detected.
+
+**⚠️ Note on NVIDIA/Windows Users:**
+If you see "Using CPU" despite having a GPU, you likely installed the CPU-only version of PyTorch. Reinstall it with CUDA support:
+```bash
+# Example for CUDA 11.8 (Check pytorch.org for your version)
+pip uninstall torch torchvision torchaudio
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+```
 *   **Header-Based Analyst Personas**: Use the `X-Analyst-Type` header to switch between different AI personalities:
     *   `advisor`: Standard financial advisor.
     *   `tax`: Professional Tax Consultant.
